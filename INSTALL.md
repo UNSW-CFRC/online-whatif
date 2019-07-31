@@ -15,7 +15,7 @@ Open the workbenchauth page in a web browser and create a new user:
 
 [https://example.com/workbenchauth](https://example.com/workbenchauth)
 
-Your temporary username and password will be emailed to you, or you can find it in the log file /var/log/tomcat7/catalina.out.  You can also [manually reset the password](#manual-password-reset). Then log in to Online WhatIf:
+Your temporary username and password will be emailed to you, or you can find it in the log file /var/log/tomcat8/catalina.out.  You can also [manually reset the password](#manual-password-reset). Then log in to Online WhatIf:
 
 [https://example.com/whatif](https://example.com/whatif)
 
@@ -134,7 +134,7 @@ Now that we have a fully updated ubuntu machine, let's get started installing st
 	sudo apt install couchdb
 
 	cd /usr/local/bin && sudo ln -s /usr/bin/pgsql2shp # whatif expects /usr/local/bin/pgsql2shp
-	sudo vim /etc/default/tomcat7
+	sudo vim /etc/default/tomcat8
 
 Update the JAVA\_OPTS line:
 
@@ -171,7 +171,7 @@ Now set up an admin user by logging in to the web interface at [http://whatif-de
 	\q
 
 	exit
-	
+
 ### Restore Sample table into the database
 
 We need to run command below to restore a sample table into the database. The dump file located in the db directory is:  wanneroodump
@@ -186,14 +186,14 @@ If installing on Ubuntu 14.04 with Java 1.7, the latest supported release is Geo
 	cd
 	wget -O geoserver-2.8.3-war.zip "http://downloads.sourceforge.net/project/geoserver/GeoServer/2.8.3/geoserver-2.8.3-war.zip"
 	unzip -d geoserver-2.8.3 geoserver-2.8.3-war.zip
-	sudo cp geoserver-2.8.3/geoserver.war /var/lib/tomcat7/webapps/
+	sudo cp geoserver-2.8.3/geoserver.war /var/lib/tomcat8/webapps/
 	rm -r geoserver-2.8.3
 
 ### Configure the geoserver through its web interface
 
 Visit [http://whatif-demo:8080/geoserver/](http://whatif-demo:8080/geoserver/) in a browser. Log in as "admin" with default password "geoserver". Change the admin password by going to Security->Users/Groups/Roles, Users/Groups tab, and clicking on the admin user. Set the password and click save. This updates the following file:
 
-	/var/lib/tomcat7/webapps/geoserver/data/security/usergroup/default/users.xml
+	/var/lib/tomcat8/webapps/geoserver/data/security/usergroup/default/users.xml
 
 * Create a new Workspace called "whatif" with the namespace URI "https://whatif-demo/whatif"
 * Create a new Store called "whatifStore":
@@ -227,15 +227,15 @@ proxy for http:
 Add the following lines:
 
 	ServerName whatif-demo
-	
+
 	ProxyPreserveHost On
 
        	RewriteEngine  On
        	RewriteRule     ^/$             https://whatif-demo/whatif/      [R]
-	
+
        	ProxyPass /geoserver ajp://localhost:8009/geoserver
        	ProxyPassReverse /geoserver ajp://localhost:8009/geoserver
-	
+
        	# Allow long GET requests for what-if
        	LimitRequestLine 21000
 
@@ -246,27 +246,27 @@ proxy for https:
 Add the following lines:
 
 	ServerName whatif-demo
-	
+
        	# Allow long GET requests for what-if
        	LimitRequestLine 21000
-	
+
        	ProxyPreserveHost On
        	ProxyPassReverseCookiePath /whatif /whatif
-	
+
        	RewriteEngine  On
        	RewriteRule     ^/$             /whatif/      [R]
        	RewriteRule     ^/whatif$       /whatif/      [R]
-	
+
        	ProxyPass /whatif/ ajp://localhost:8009/whatif/
        	ProxyPassReverse /whatif/ ajp://localhost:8009/whatif/
-	
+
        	ProxyPass /aurin-wif/ ajp://localhost:8009/aurin-wif/
        	ProxyPassReverse /aurin-wif/ ajp://localhost:8009/aurin-wif/
-	
+
 	# HTTP proxy as AJP doesn't have sufficiently large GET request support
        	ProxyPass /geoserver http://localhost:8080/geoserver
        	ProxyPassReverse /geoserver http://localhost:8080/geoserver
-	
+
        	ProxyPass /workbenchauth ajp://localhost:8009/workbenchauth
        	ProxyPassReverse /workbenchauth ajp://localhost:8009/workbenchauth
 
@@ -314,13 +314,13 @@ Possible reasons you might want to generate your own public key:
 * If whatif can't authenticate against the workbenchauth service
 * If your server's hostname (/etc/hostname) does not match the DNS name that you're using
 
-Here's an example of the error message you'd see in the tomcat log (/var/log/tomcat7/catalina.out) if the java keystore does not contain your SSL public key:
+Here's an example of the error message you'd see in the tomcat log (/var/log/tomcat8/catalina.out) if the java keystore does not contain your SSL public key:
 
 	15:39:09.147 [ajp-bio-8009-exec-1] INFO  a.o.aurin.dispatcher.RestController - org.springframework.web.client.ResourceAccessException: I/O error: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target; nested exception is javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed: sun.security.provider.certpath.SunCertPathBuilderException: unable to find valid certification path to requested target
 
 In this case, running the above-mentioned refresh-java-keystore.sh script and restarting tomcat should fix the problem, e.g.:
 
-	root@whatif-demo:/home/whatif/wd/online-whatif/utils# ./refresh-java-keystore.sh 
+	root@whatif-demo:/home/whatif/wd/online-whatif/utils# ./refresh-java-keystore.sh
 	Replacing debian:Starfield_Class_2_CA.pem
 	Replacing debian:Juur-SK.pem
 	[snip]
@@ -334,7 +334,7 @@ In this case, running the above-mentioned refresh-java-keystore.sh script and re
 
 ### Configure Tomcat
 
-	sudo vim /etc/tomcat7/server.xml 
+	sudo vim /etc/tomcat8/server.xml
 
 Enable ajp connector:
 
@@ -342,7 +342,7 @@ Enable ajp connector:
 
 Restart:
 
-	service tomcat7 restart
+	service tomcat8 restart
 
 ### Create WhatIf configuration file
 
@@ -502,7 +502,7 @@ Add the following contents, replacing the passwords with those you created above
 	env.ui.authpub_URL=https\://localhost/workbenchauth/
 	env.auth.adminUsername=aurin
 	env.auth.adminPassword=demoPassword
-	
+
 	env.geo.db.host=localhost
 	env.geo.db.name=envisiondb
 	env.geo.db.port=5432
@@ -511,12 +511,12 @@ Add the following contents, replacing the passwords with those you created above
 	env.geo.db.type=postgis
 	env.geo.db.validateConnection=true
 	env.geo.db.schema=susip
-	
+
 	env.datasource.driverclassname=org.postgresql.Driver
 	env.datasource.url=jdbc:postgresql://localhost/envisiondb
 	env.datasource.username=envision
 	env.datasource.password=(password)
-	
+
 	#other
 	aurin.dir=/etc/aurin
 
@@ -568,19 +568,19 @@ If you have problem with the tests you can use -Dmaven.test.skip=true.
 
 If you're building on a different machine, copy these to the what-if machine first, then deploy them in the Tomcat application container:
 
-	sudo cp ~/wd/workbenchauth/target/workbenchauth-1.0.0.war /var/lib/tomcat7/webapps/workbenchauth.war
-	sudo cp ~/wd/online-whatif/target/aurin-wif-1.0.war /var/lib/tomcat7/webapps/aurin-wif.war
-	sudo cp ~/wd/online-whatif-ui/target/whatif-1.0.war /var/lib/tomcat7/webapps/whatif.war
+	sudo cp ~/wd/workbenchauth/target/workbenchauth-1.0.0.war /var/lib/tomcat8/webapps/workbenchauth.war
+	sudo cp ~/wd/online-whatif/target/aurin-wif-1.0.war /var/lib/tomcat8/webapps/aurin-wif.war
+	sudo cp ~/wd/online-whatif-ui/target/whatif-1.0.war /var/lib/tomcat8/webapps/whatif.war
 
 Restart the services:
 
 	sudo service apache2 restart
-	sudo service tomcat7 restart
+	sudo service tomcat8 restart
 
 Check logs for errors
 
 	tail -f /var/log/apache2/access.log /var/log/apache2/error.log
-	tail -f /var/log/tomcat7/catalina.out
+	tail -f /var/log/tomcat8/catalina.out
 
 ### Create users
 
@@ -627,4 +627,4 @@ Now build the Javadocs:
 
 ### Testing
 
-For testing whatif REST services we use the Rest Console plugin in Chrome and Add X-AURIN-USER-ID: aurin in Custom Headers. 
+For testing whatif REST services we use the Rest Console plugin in Chrome and Add X-AURIN-USER-ID: aurin in Custom Headers.

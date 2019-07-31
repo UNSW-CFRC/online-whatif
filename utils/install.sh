@@ -1,5 +1,5 @@
 #!/bin/bash
-# 
+#
 # Installation script for Online WhatIf
 #
 # Online WhatIf is licensed under the MIT license, see:
@@ -24,7 +24,7 @@
 #   https://servername/workbenchauth
 #
 # Your temporary username and password will be emailed to you, or you can find
-# it in the log file /var/log/tomcat7/catalina.out. Then log in to Online
+# it in the log file /var/log/tomcat8/catalina.out. Then log in to Online
 # WhatIf:
 #
 #   https://servername/whatif
@@ -98,9 +98,9 @@ then
 fi
 
 # Update JAVA_OPTS
-if ! grep -q "^JAVA_OPTS.*/etc/aurin" /etc/default/tomcat7
+if ! grep -q "^JAVA_OPTS.*/etc/aurin" /etc/default/tomcat8
 then
-	sed -i 's/^JAVA_OPTS=.*/JAVA_OPTS="-Djava.awt.headless=true -XX:+UseConcMarkSweepGC -Dfile.encoding=UTF-8 -Xmx2G -XX:PermSize=512M -Daurin.dir=\/etc\/aurin"/' /etc/default/tomcat7
+	sed -i 's/^JAVA_OPTS=.*/JAVA_OPTS="-Djava.awt.headless=true -XX:+UseConcMarkSweepGC -Dfile.encoding=UTF-8 -Xmx2G -XX:PermSize=512M -Daurin.dir=\/etc\/aurin"/' /etc/default/tomcat8
 fi
 
 # Bind couchdb to all network interfaces
@@ -127,7 +127,7 @@ fi
 pg_restore -Fc -U $pg_user -i -h localhost -p 5432 -d whatif-development $initial_pwd/../db/wanneroodump
 
 # Deploy geoserver on Tomcat
-if [ ! -e /var/lib/tomcat7/webapps/geoserver.war ]
+if [ ! -e /var/lib/tomcat8/webapps/geoserver.war ]
 then
 	UUIDGEN="`which uuidgen`"
 	if [ "$UUIDGEN" != "" ]
@@ -136,17 +136,17 @@ then
 	else
 		tempdir="/tmp/6039708c-4551-11e5-9220-08002757beab"
 	fi
-	service tomcat7 stop
+	service tomcat8 stop
 	mkdir -p $tempdir && cd $tempdir
 	curl -s -o "$geoserver_file_name" "$geoserver_download_url"
 	geo_base="`basename $geoserver_file_name .zip`"
 	mkdir -p "$geo_base" && cd "$geo_base"
 	unzip -q "../$geoserver_file_name"
-	mv geoserver.war /var/lib/tomcat7/webapps/
-	chown root:root /var/lib/tomcat7/webapps/geoserver.war
+	mv geoserver.war /var/lib/tomcat8/webapps/
+	chown root:root /var/lib/tomcat8/webapps/geoserver.war
 	cd "$initial_pwd"
 	rm -rf "$tempdir"
-	service tomcat7 start
+	service tomcat8 start
 fi
 
 # update the master password
@@ -159,8 +159,8 @@ then
 </masterPassword>"
 	curl -v -u "admin:$geoserver_master_pw_initial" -XPUT -H "Content-type: text/xml" -d "$xml" http://localhost:8080/geoserver/rest/security/masterpw.xml
 	# update the admin password using the digest we just set for the master password (so the admin and master passwords will be the same).
-	master_digest=$(</var/lib/tomcat7/webapps/geoserver/data/security/masterpw.digest)
-	sed -i "s#^\s*<user.*name=\"admin\".*>#<user enabled=\"true\" name=\"admin\" password=\"$master_digest\"\/>#" /var/lib/tomcat7/webapps/geoserver/data/security/usergroup/default/users.xml
+	master_digest=$(</var/lib/tomcat8/webapps/geoserver/data/security/masterpw.digest)
+	sed -i "s#^\s*<user.*name=\"admin\".*>#<user enabled=\"true\" name=\"admin\" password=\"$master_digest\"\/>#" /var/lib/tomcat8/webapps/geoserver/data/security/usergroup/default/users.xml
 	echo -n "wait for the new admin password to be picked up by geoserver"
 	for ii in {1..10} ; do echo -n '.' ; sleep 1 ; done
 	echo ''
@@ -283,7 +283,7 @@ fi
 
 # Configure tomcat, enabling AJP connector
 # XXX need to check existing file first
-sed -i "s/<\!-- Define an AJP 1.3 Connector on port 8009 -->/<\!-- Define an AJP 1.3 Connector on port 8009 -->\n    <Connector port=\"8009\" protocol=\"AJP\/1.3\" redirectPort=\"8443\" \/>/" /etc/tomcat7/server.xml
+sed -i "s/<\!-- Define an AJP 1.3 Connector on port 8009 -->/<\!-- Define an AJP 1.3 Connector on port 8009 -->\n    <Connector port=\"8009\" protocol=\"AJP\/1.3\" redirectPort=\"8443\" \/>/" /etc/tomcat8/server.xml
 
 # create whatif configuration file
 if [ ! -e /etc/aurin/whatif-combined.properties ]
@@ -505,14 +505,14 @@ then
 fi
 
 # Deploy the war files
-sudo cp dependencies/workbenchauth/target/workbenchauth-1.0.0.war /var/lib/tomcat7/webapps/workbenchauth.war
-sudo cp dependencies/online-whatif-ui/target/whatif-1.0.war /var/lib/tomcat7/webapps/whatif.war
-sudo cp ../target/aurin-wif-1.0.war /var/lib/tomcat7/webapps/aurin-wif.war
+sudo cp dependencies/workbenchauth/target/workbenchauth-1.0.0.war /var/lib/tomcat8/webapps/workbenchauth.war
+sudo cp dependencies/online-whatif-ui/target/whatif-1.0.war /var/lib/tomcat8/webapps/whatif.war
+sudo cp ../target/aurin-wif-1.0.war /var/lib/tomcat8/webapps/aurin-wif.war
 
 # Restart relevant services
 sudo service dovecot restart
 sudo service postfix restart
 sudo service postgresql restart
 sudo service couchdb restart
-sudo service tomcat7 restart
+sudo service tomcat8 restart
 sudo service apache2 restart

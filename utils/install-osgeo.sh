@@ -25,7 +25,7 @@
 #   https://servername/workbenchauth
 #
 # Your temporary username and password will be emailed to you, or you can find
-# it in the log file /var/log/tomcat7/catalina.out. Then log in to Online
+# it in the log file /var/log/tomcat8/catalina.out. Then log in to Online
 # WhatIf:
 #
 #   https://servername/whatif
@@ -135,9 +135,9 @@ then
 fi
 
 # Update JAVA_OPTS
-if ! grep -q "^JAVA_OPTS.*/etc/aurin" /etc/default/tomcat7
+if ! grep -q "^JAVA_OPTS.*/etc/aurin" /etc/default/tomcat8
 then
-	sudo sed -i 's/^JAVA_OPTS=.*/JAVA_OPTS="-Djava.awt.headless=true -XX:+UseConcMarkSweepGC -Dfile.encoding=UTF-8 -Xmx2G -XX:PermSize=512M -Daurin.dir=\/etc\/aurin"/' /etc/default/tomcat7
+	sudo sed -i 's/^JAVA_OPTS=.*/JAVA_OPTS="-Djava.awt.headless=true -XX:+UseConcMarkSweepGC -Dfile.encoding=UTF-8 -Xmx2G -XX:PermSize=512M -Daurin.dir=\/etc\/aurin"/' /etc/default/tomcat8
 fi
 
 # Bind couchdb to all network interfaces
@@ -304,7 +304,7 @@ then
 fi
 
 # Configure tomcat, enabling AJP connector
-sudo perl -0777 -i -pe 's/    <!-- Define an AJP 1.3 Connector on port 8009 -->\n    <!--\n    <Connector port="8009" protocol="AJP\/1.3" redirectPort="8443" \/>\n    -->/    <!-- Define an AJP 1.3 Connector on port 8009 -->\n    <Connector port="8009" protocol="AJP\/1.3" redirectPort="8443" \/>/' /etc/tomcat7/server.xml
+sudo perl -0777 -i -pe 's/    <!-- Define an AJP 1.3 Connector on port 8009 -->\n    <!--\n    <Connector port="8009" protocol="AJP\/1.3" redirectPort="8443" \/>\n    -->/    <!-- Define an AJP 1.3 Connector on port 8009 -->\n    <Connector port="8009" protocol="AJP\/1.3" redirectPort="8443" \/>/' /etc/tomcat8/server.xml
 
 # create whatif configuration file
 if [ ! -e /etc/aurin/whatif-combined.properties ]
@@ -548,9 +548,9 @@ function build_war_files {
 
 	# Deploy the war files
 	cd "$script_dir"
-	sudo cp dependencies/workbenchauth/target/workbenchauth-1.0.0.war /var/lib/tomcat7/webapps/workbenchauth.war
-	sudo cp dependencies/online-whatif-ui/target/whatif-1.0.war /var/lib/tomcat7/webapps/whatif.war
-	sudo cp ../target/aurin-wif-1.0.war /var/lib/tomcat7/webapps/aurin-wif.war
+	sudo cp dependencies/workbenchauth/target/workbenchauth-1.0.0.war /var/lib/tomcat8/webapps/workbenchauth.war
+	sudo cp dependencies/online-whatif-ui/target/whatif-1.0.war /var/lib/tomcat8/webapps/whatif.war
+	sudo cp ../target/aurin-wif-1.0.war /var/lib/tomcat8/webapps/aurin-wif.war
 }
 
 if [[ build_source -eq 1 ]]
@@ -569,9 +569,9 @@ else
 		fi
 	done
 
-	sudo cp "$script_dir"/download/workbenchauth-1.0.0.war /var/lib/tomcat7/webapps/workbenchauth.war
-	sudo cp "$script_dir"/download/whatif-1.0.war /var/lib/tomcat7/webapps/whatif.war
-	sudo cp "$script_dir"/download/aurin-wif-1.0.war /var/lib/tomcat7/webapps/aurin-wif.war
+	sudo cp "$script_dir"/download/workbenchauth-1.0.0.war /var/lib/tomcat8/webapps/workbenchauth.war
+	sudo cp "$script_dir"/download/whatif-1.0.war /var/lib/tomcat8/webapps/whatif.war
+	sudo cp "$script_dir"/download/aurin-wif-1.0.war /var/lib/tomcat8/webapps/aurin-wif.war
 fi
 
 # Ensure that the self-signed SSL certificate is trusted by java
@@ -600,7 +600,7 @@ then
 fi
 
 # Restart relevant services
-services="dovecot postfix postgresql couchdb tomcat7 apache2"
+services="dovecot postfix postgresql couchdb tomcat8 apache2"
 for service in $services
 do
 	if dpkg -l |awk '{ print $2 }' |grep "^${service}" > /dev/null

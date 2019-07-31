@@ -72,7 +72,7 @@
 		<geotools.version>9.4</geotools.version>
 		<erktop.version>1.4.0</erktop.version>
 		<cglib.version>2.2.2</cglib.version>
-		<cargo.container.id>tomcat7x</cargo.container.id>
+		<cargo.container.id>tomcat8x</cargo.container.id>
 		<tomcat.distribution.url>http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.40/bin/apache-tomcat-7.0.40.zip</tomcat.distribution.url>
 		<geoserver-manager.version>[1.7,1.8)</geoserver-manager.version>
 		<!-- Sonar -->
