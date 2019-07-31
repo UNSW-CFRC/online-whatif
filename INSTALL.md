@@ -125,14 +125,7 @@ We should add the same whatif-demo entry to the hosts file on the virtual machin
 
 Now that we have a fully updated ubuntu machine, let's get started installing stuff.
 
-	sudo apt-get install tomcat8 postgresql postgis apache2 unzip
-
-	# Install couchdb, according to https://linuxize.com/post/how-to-install-couchdb-on-ubuntu-18-04/
-	curl -L https://couchdb.apache.org/repo/bintray-pubkey.asc | sudo apt-key add -
-	echo "deb https://apache.bintray.com/couchdb-deb bionic main" | sudo tee -a /etc/apt/sources.list
-	sudo apt update
-	sudo apt install couchdb
-
+	sudo apt-get install tomcat7 postgresql postgis postgresql-9.3-postgis-2.1 couchdb apache2 unzip
 	cd /usr/local/bin && sudo ln -s /usr/bin/pgsql2shp # whatif expects /usr/local/bin/pgsql2shp
 	sudo vim /etc/default/tomcat7
 
