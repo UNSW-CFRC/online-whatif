@@ -6,7 +6,7 @@
 # https://raw.githubusercontent.com/AURIN/online-whatif/master/LICENSE
 #
 # Tested on the following operating systems:
-#  * Ubuntu 18.04
+#  * Ubuntu 14.04
 #
 # To get started, install Linux and install git, and clone online-whatif:
 #
@@ -43,13 +43,7 @@ fi
 
 echo Updating OS packages and installing basic dependencies
 apt-get update && apt-get dist-upgrade -y
-apt-get install -y tomcat8 postgresql postgis apache2 unzip curl pwgen
-
-# Install couchdb, according to https://linuxize.com/post/how-to-install-couchdb-on-ubuntu-18-04/
-curl -L https://couchdb.apache.org/repo/bintray-pubkey.asc | apt-key add -
-echo "deb https://apache.bintray.com/couchdb-deb bionic main" | tee -a /etc/apt/sources.list
-apt update
-apt install couchdb
+apt-get install -y tomcat7 postgresql postgis postgresql-9.3-postgis-2.1 couchdb apache2 unzip curl pwgen
 
 # Set all variables and passwords (you may update these to your liking)
 pg_user=whatif
