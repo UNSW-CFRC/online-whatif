@@ -535,7 +535,7 @@ function build_war_files {
 		( cd workbenchauth && git pull )
 	fi
 	export AURIN_DIR="/etc/aurin"
-	export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre
+	export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/jre
 	cd workbenchauth
 	sudo -u $user1 mvn clean package -Ddeployment=development -Dsystem=ali-dev -Daurin.dir=$AURIN_DIR
 	cd ..

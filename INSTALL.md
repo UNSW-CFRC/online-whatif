@@ -555,7 +555,7 @@ Allow the dev machine to be able to talk to github account.  If you're cloning f
 	git clone git@github.com:AURIN/online-whatif-ui.git
 	cd workbenchauth
 	export AURIN_DIR="/etc/aurin"
-	export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre
+	export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/jre
 	mvn clean package -Ddeployment=development -Dsystem=ali-dev -Daurin.dir=$AURIN_DIR
 	cd ../online-whatif
 	mvn clean package -Ddeployment=development -Dsystem=ali-dev -Daurin.dir=$AURIN_DIR

@@ -104,9 +104,9 @@ then
 fi
 
 # Bind couchdb to all network interfaces
-if ! grep -q "^bind_address.*0.0.0.0" /etc/couchdb/default.ini
+if ! grep -q "^bind_address.*0.0.0.0" /opt/couchdb/etc/default.ini
 then
-	sed -i 's/^bind_address.*/bind_address = 0.0.0.0/' /etc/couchdb/default.ini
+	sed -i 's/^bind_address.*/bind_address = 0.0.0.0/' /opt/couchdb/etc/default.ini
 fi
 
 # Create database
@@ -124,7 +124,7 @@ EOF
 fi
 
 # restore sample database.  Password is supplied in PGPASSWORD variable
-pg_restore -Fc -U $pg_user -i -h localhost -p 5432 -d whatif-development $initial_pwd/../db/wanneroodump
+pg_restore -Fc -U $pg_user -h localhost -p 5432 -d whatif-development $initial_pwd/../db/wanneroodump
 
 # Deploy geoserver on Tomcat
 if [ ! -e /var/lib/tomcat8/webapps/geoserver.war ]
@@ -173,7 +173,7 @@ then
 <workspace>
   <name>$workspace</name>
 </workspace>"
-	curl -v -u "admin:$geoserver_master_pw" -XPOST -H "Content-type: text/xml" -d "$xml" http://localhost:8080/geoserver/rest/workspaces
+	curl -v -u "admin:$geoserver_master_pw" -H "Content-type: text/xml" -d "$xml" http://localhost:8080/geoserver/rest/workspaces
 fi
 
 # create a new datastore
@@ -214,7 +214,7 @@ then
     <entry key=\"user\">$pg_user</entry>
   </connectionParameters>
 </dataStore>"
-	curl -v -u "admin:$geoserver_master_pw" -XPOST -H "Content-type: text/xml" -d "$xml" "http://localhost:8080/geoserver/rest/workspaces/$workspace/datastores"
+	curl -v -u "admin:$geoserver_master_pw" -H "Content-type: text/xml" -d "$xml" "http://localhost:8080/geoserver/rest/workspaces/$workspace/datastores"
 fi
 
 # Configure the apache reverse proxy
@@ -484,7 +484,7 @@ then
 	git clone https://github.com/AURIN/workbenchauth.git
 fi
 export AURIN_DIR="/etc/aurin"
-export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64/jre
+export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/jre
 if [ ! -f workbenchauth/target/workbenchauth-1.0.0.war ]
 then
 	cd workbenchauth
