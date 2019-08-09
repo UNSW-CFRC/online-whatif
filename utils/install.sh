@@ -484,7 +484,7 @@ then
 	git clone https://github.com/AURIN/workbenchauth.git
 fi
 export AURIN_DIR="/etc/aurin"
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64/jre
+export JAVA_HOME=/usr/lib/jvm/jva-11-openjdk-amd64
 if [ ! -f workbenchauth/target/workbenchauth-1.0.0.war ]
 then
 	cd workbenchauth
