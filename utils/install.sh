@@ -481,7 +481,7 @@ then
 fi
 if [ ! -e workbenchauth ]
 then
-	git clone https://github.com/AURIN/workbenchauth.git
+	git clone --single-branch --branch ubuntu-18 https://github.com/UNSW-CFRC/workbenchauth.git
 fi
 export AURIN_DIR="/etc/aurin"
 export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
