@@ -484,7 +484,7 @@ then
 	git clone --single-branch --branch ubuntu-18 https://github.com/UNSW-CFRC/workbenchauth.git
 fi
 export AURIN_DIR="/etc/aurin"
-export JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+export JAVA_HOME=/usr/local/java/jdk8u222-b10
 if [ ! -f workbenchauth/target/workbenchauth-1.0.0.war ]
 then
 	cd workbenchauth
